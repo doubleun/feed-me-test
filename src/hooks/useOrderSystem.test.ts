@@ -436,6 +436,63 @@ describe('useOrderSystem', () => {
       expect(result.current.pendingOrders[0].id).toBe(2)
       expect(result.current.bots[0].currentOrder?.id).toBe(1) // Bot 1 still processing Order 1
     })
+
+    it('should reassign VIP order to available bot if a bot was removed', async () => {
+      const { result } = renderHook(() => useOrderSystem())
+
+      act(() => {
+        result.current.addOrder('VIP') // Order 1
+        result.current.addOrder('VIP') // Order 2
+        result.current.addOrder('NORMAL') // Order 3
+        result.current.addBot() // Bot 1 - gets VIP Order 1
+        result.current.addBot() // Bot 2 - gets VIP Order 2
+      })
+
+      expect(result.current.bots[0].currentOrder?.id).toBe(1)
+      expect(result.current.bots[1].currentOrder?.id).toBe(2)
+      expect(result.current.processingOrders).toHaveLength(2)
+      expect(result.current.pendingOrders).toHaveLength(1)
+
+      act(() => {
+        // Add more VIP order
+        result.current.addOrder('VIP') // Order 4
+
+        // Remove Bot 2 - Order 2 should return to pending
+        result.current.removeBot()
+      })
+
+      expect(result.current.bots).toHaveLength(1)
+      expect(result.current.processingOrders).toHaveLength(1)
+      expect(result.current.pendingOrders).toHaveLength(3) // Orders 2, 4, and 3
+
+      await act(async () => {
+        // Advance time to complete Order 1
+        vi.advanceTimersByTime(10000)
+        await vi.runAllTimersAsync()
+      })
+
+      // Bot 1 should pick up VIP Order 2 next (not NORMAL Order 3 or VIP Order 4)
+      // since it was returned to pending when Bot 2 got removed while processing
+      expect(result.current.bots[0].currentOrder?.id).toBe(2)
+      expect(result.current.bots[0].currentOrder?.type).toBe('VIP')
+      expect(result.current.processingOrders).toHaveLength(1)
+      expect(result.current.pendingOrders).toHaveLength(2) // Orders 4 and 3
+
+      await act(async () => {
+        // Advance time to complete Order 2
+        vi.advanceTimersByTime(10000)
+        await vi.runAllTimersAsync()
+      })
+
+      // Bot 1 should pick up VIP Order 4 next (not NORMAL Order 3)
+      expect(result.current.bots[0].currentOrder?.id).toBe(4)
+      expect(result.current.bots[0].currentOrder?.type).toBe('VIP')
+      expect(result.current.processingOrders).toHaveLength(1)
+      expect(result.current.pendingOrders).toHaveLength(1) // Order 3
+
+      // Completed VIP Orders 1, 2
+      expect(result.current.completedOrders).toHaveLength(2) // Orders 1 and 2
+    })
   })
 
   describe('Edge Cases', () => {

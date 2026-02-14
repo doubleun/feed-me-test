@@ -28,14 +28,17 @@ type OrderSystemAction =
 
 /**
  * Insert order maintaining VIP priority.
- * VIP orders are inserted after the last VIP PENDING order.
+ * VIP orders are inserted after the last VIP PENDING or PROCESSING order.
  * NORMAL orders are appended to the end.
  */
 function insertOrderByPriority(orders: Order[], newOrder: Order): Order[] {
   if (newOrder.type === 'VIP') {
-    // Find the last VIP order in PENDING status
+    // Find the last VIP order in PENDING or PROCESSING status
     const lastVipIndex = orders.reduce((lastIdx, order, idx) => {
-      if (order.type === 'VIP' && order.status === 'PENDING') {
+      if (
+        order.type === 'VIP' &&
+        (order.status === 'PENDING' || order.status === 'PROCESSING')
+      ) {
         return idx
       }
       return lastIdx
