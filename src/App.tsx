@@ -19,7 +19,7 @@ function App() {
   } = useOrderSystem()
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 to-yellow-50 p-8">
+    <div className="min-h-screen bg-linear-to-br from-orange-50 to-yellow-50 p-8">
       <div className="w-full space-y-6">
         {/* Header */}
         <div className="text-center space-y-2">

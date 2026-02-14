@@ -14,5 +14,4 @@ export interface Bot {
   id: number
   status: BotStatus
   currentOrder: Order | null
-  processingTimer?: NodeJS.Timeout
 }
