@@ -18,7 +18,7 @@ export const BotControls = ({
       </span>
       <div className="flex gap-2">
         <Button onClick={onAddBot} size="lg">
-          Add Bot
+          + Bot
         </Button>
         <Button
           onClick={onRemoveBot}
@@ -26,7 +26,7 @@ export const BotControls = ({
           size="lg"
           disabled={botCount === 0}
         >
-          Remove Bot
+          - Bot
         </Button>
       </div>
     </div>

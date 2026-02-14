@@ -11,13 +11,13 @@ export const OrderControls = ({
 }: OrderControlsProps) => {
   return (
     <div className="flex flex-wrap items-center gap-4">
-      <span className="text-lg font-semibold">New Order:</span>
-      <div className="flex gap-2">
+      <span className="text-lg font-semibold">Order:</span>
+      <div className="flex flex-wrap gap-2">
         <Button onClick={onAddNormalOrder} variant="outline" size="lg">
-          Normal Order
+          New Normal Order
         </Button>
         <Button onClick={onAddVipOrder} size="lg">
-          VIP Order
+          New VIP Order
         </Button>
       </div>
     </div>
