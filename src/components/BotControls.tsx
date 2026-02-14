@@ -12,7 +12,7 @@ export const BotControls = ({
   onRemoveBot,
 }: BotControlsProps) => {
   return (
-    <div className="flex items-center gap-4">
+    <div className="flex flex-wrap items-center gap-4">
       <span className="text-lg font-semibold">
         Bots: <span className="text-2xl text-blue-600">{botCount}</span>
       </span>

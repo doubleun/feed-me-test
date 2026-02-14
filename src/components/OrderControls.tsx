@@ -10,7 +10,7 @@ export const OrderControls = ({
   onAddVipOrder,
 }: OrderControlsProps) => {
   return (
-    <div className="flex items-center gap-4">
+    <div className="flex flex-wrap items-center gap-4">
       <span className="text-lg font-semibold">New Order:</span>
       <div className="flex gap-2">
         <Button onClick={onAddNormalOrder} variant="outline" size="lg">
